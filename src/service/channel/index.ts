@@ -34,32 +34,39 @@ export class ChannelService {
     return true;
   }
 
-  public build (params: ChannelInfo): string {
-    return `ch=${params.ch}&sub=${params.sub}&uid=${params.uid}`;
+  public build (info: ChannelInfo): string {
+    this.info = info;
+
+    return `ch=${info.ch}&sub=${info.sub}&uid=${info.uid}`;
   }
 
   public parse (strOrObj: any): ChannelInfo {
-    let ch = null, sub = null, uid = null, params;
+    let ch = null, sub = null, uid = null, info;
 
     if (this.isURL(strOrObj)) {
-      params = {};
+      info = {};
     }
 
     if (this.isQuery(strOrObj)) {
-      params = {};
+      info = {};
     }
 
     if (this.isObj(strOrObj)) {
-      params = strOrObj;
+      info = strOrObj;
     }
 
-    ch = params.ch;
-    sub = params.sub;
-    uid = params.uid;
+    ch = info.ch;
+    sub = info.sub;
+    uid = info.uid;
 
-    return <ChannelInfo>{ ch: ch, sub: sub, uid: uid };
+    this.info = info;
+
+    return this.info;
+  }
+
+  public isValid (): boolean {
+    return !!this.info && !!this.info.ch && !!this.info.sub && !!this.info.uid;
   }
 }
-
 
 export const channel = new ChannelService();
